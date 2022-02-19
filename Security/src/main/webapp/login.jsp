@@ -14,7 +14,7 @@
 		THIS JSP FILE IS GOING TO BE THE LOGIN.JSP
 	</h2>
 	<a href="./production/index.html">
-		REDIRECT TO INDEX, JUST FOR A WHILE
+		REDIRECT TO INDEX, JUST FOR A WHILE ->
 	</a>
 </body>
 </html>
