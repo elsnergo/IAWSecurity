@@ -1,11 +1,7 @@
 package datos;
 import java.sql.Connection;
 import java.sql.SQLException;
-
-//import javax.sql.DataSource;
 import javax.swing.JOptionPane;
-
-//import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 
 public class poolConexion 
@@ -14,15 +10,12 @@ public class poolConexion
 	private static poolConexion INSTANCE = null;
 	private static Connection con = null;
 	private static BasicDataSource dataSource;
-//	private static String url = "jdbc:mysql://localhost:3306/flesnic?allowPublicKeyRetrieval=true";
-//	private static String url = "jdbc:mysql://localhost:3306/flesnic?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-	private static String url = "jdbc:mysql://localhost:3306/flesnic?autoReconnect=true&useSSL=false&serverTimezone=UTC";
+	private static String url = "jdbc:mysql://localhost:3306/seguridad?autoReconnect=true&useSSL=false&serverTimezone=UTC";
 	private static String user = "root";
 	private static String pass="Egonzalez87";
 
     //Constructor
-	private poolConexion()
-    {
+	private poolConexion(){
 		inicializaDataSource();
     }
 	
@@ -45,9 +38,7 @@ public class poolConexion
 	}
 	
 
-    public final void inicializaDataSource()
-    {
-
+    public final void inicializaDataSource(){
     	org.apache.commons.dbcp.BasicDataSource basicDataSource = new org.apache.commons.dbcp.BasicDataSource();
     	basicDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         basicDataSource.setUsername(user);
@@ -60,8 +51,7 @@ public class poolConexion
     public static boolean EstaConectado()
     {
     	boolean resp = false;
-    	try
-    	{
+    	try{
     		// con = poolConexion.dataSource.getConnection();
     		if ((con==null) || (con.isClosed()))
     			resp = false;
@@ -77,14 +67,11 @@ public class poolConexion
     	return resp;
     }
 
-    public static Connection getConnection() 
-    {	
-	   if (EstaConectado()==false) 
-		   {
-		   		try 
-		   		{
+    public static Connection getConnection() {	
+	   if (EstaConectado()==false) {
+		   		try {
 					con = poolConexion.dataSource.getConnection();
-					System.out.println("se conecto Flesnic!!!");
+					System.out.println("se conecto a BD SEGURIDAD!!!");
 				} 
 		   		catch (SQLException e) 
 		   		{
@@ -96,17 +83,13 @@ public class poolConexion
 	   return con;
     }
     
-    public static void closeConnection(Connection con) 
-    {	
-    	if (EstaConectado()!=false) 
-    	{
-    		try 
-    		{
+    public static void closeConnection(Connection con) {	
+    	if (EstaConectado()!=false) {
+    		try {
     			con.close();
     			System.out.println("Cerrando la Conexion");
     		} 
-    		catch (SQLException e) 
-    		{
+    		catch (SQLException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
     			System.out.println(e.getMessage());
@@ -115,40 +98,33 @@ public class poolConexion
     }
    
 
-	public static void main(String[] args) throws SQLException 
-	{
+	public static void main(String[] args) throws SQLException {
 		// TODO Auto-generated method stub
 		/*
-		poolConexion.getInstance();
-		Connection con = null;
-        
-        try 
-        {
-	    	con = poolConexion.getConnection();
-	    	if(con!=null)
-	    	{
-	    		JOptionPane.showMessageDialog(null, "Conectado a flesnic");
-	    		System.out.println("Conectado a flesnic!!!");
-	    	}
-	    	else
-	    	{
-	    		JOptionPane.showMessageDialog(null, "Error al Conectr a flesnic!!!");
-	    		System.out.println("Error al Conectar a flesnic!!!");
-	    	}
-        }
-        finally
-        {
-            try 
-            {
-               con.close();
-               System.out.println("Se desconectó de flesnic!!!");
-            } 
-            catch (SQLException ex) 
-            {
-            	ex.printStackTrace();
-                System.out.println(ex.getMessage());
-            }
-        }
+			poolConexion.getInstance();
+			Connection con = null;
+	        
+	        try {
+		    	con = poolConexion.getConnection();
+		    	if(con!=null){
+		    		JOptionPane.showMessageDialog(null, "Conectado a BD Seguridad...");
+		    		System.out.println("Conectado a BD Seguridad!!!");
+		    	}
+		    	else{
+		    		JOptionPane.showMessageDialog(null, "Error al Conectar a BD Seguridad!!!");
+		    		System.out.println("Error al Conectar a BD Seguridad!!!");
+		    	}
+	        }
+	        finally{
+	            try {
+	               con.close();
+	               System.out.println("Se desconectó de BD Seguridad!!!");
+	            } 
+	            catch (SQLException ex) {
+	            	ex.printStackTrace();
+	                System.out.println(ex.getMessage());
+	            }
+	        }
 		*/
 	}
 
