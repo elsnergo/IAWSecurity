@@ -41,6 +41,7 @@ public class Dt_usuario {
 				user.setPwd(rs.getString("pwd"));
 				user.setNombres(rs.getString("nombres"));
 				user.setApellidos(rs.getNString("apellidos"));
+				user.setEmail(rs.getString("email"));
 				/*user.setfCreacion(rs.getTimestamp("fcreacion"));*/
 				user.setEstado(rs.getInt("estado"));
 				listUser.add(user);
