@@ -43,6 +43,15 @@ define(function () {
     },
     searching: function () {
       return 'Sto cercando…';
+    },
+    removeAllItems: function () {
+      return 'Rimuovi tutti gli oggetti';
+    },
+    removeItem: function () {
+      return 'Rimuovi oggetto';
+    },
+    search: function() {
+      return 'Ricerca';  
     }
   };
 });

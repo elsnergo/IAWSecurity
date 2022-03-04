@@ -14,7 +14,7 @@ define([
 
   Results.prototype.render = function () {
     var $results = $(
-      '<ul class="select2-results__options" role="tree"></ul>'
+      '<ul class="select2-results__options" role="listbox"></ul>'
     );
 
     if (this.options.get('multiple')) {
@@ -37,7 +37,7 @@ define([
     this.hideLoading();
 
     var $message = $(
-      '<li role="treeitem" aria-live="assertive"' +
+      '<li role="alert" aria-live="assertive"' +
       ' class="select2-results__option"></li>'
     );
 
@@ -99,9 +99,9 @@ define([
 
   Results.prototype.highlightFirstItem = function () {
     var $options = this.$results
-      .find('.select2-results__option[aria-selected]');
+      .find('.select2-results__option--selectable');
 
-    var $selected = $options.filter('[aria-selected=true]');
+    var $selected = $options.filter('.select2-results__option--selected');
 
     // Check if there are any selected options
     if ($selected.length > 0) {
@@ -120,25 +120,27 @@ define([
     var self = this;
 
     this.data.current(function (selected) {
-      var selectedIds = $.map(selected, function (s) {
+      var selectedIds = selected.map(function (s) {
         return s.id.toString();
       });
 
       var $options = self.$results
-        .find('.select2-results__option[aria-selected]');
+        .find('.select2-results__option--selectable');
 
       $options.each(function () {
         var $option = $(this);
 
-        var item = $.data(this, 'data');
+        var item = Utils.GetData(this, 'data');
 
         // id needs to be converted to a string when comparing
         var id = '' + item.id;
 
         if ((item.element != null && item.element.selected) ||
-            (item.element == null && $.inArray(id, selectedIds) > -1)) {
+            (item.element == null && selectedIds.indexOf(id) > -1)) {
+          this.classList.add('select2-results__option--selected');
           $option.attr('aria-selected', 'true');
         } else {
+          this.classList.remove('select2-results__option--selected');
           $option.attr('aria-selected', 'false');
         }
       });
@@ -168,20 +170,27 @@ define([
 
   Results.prototype.option = function (data) {
     var option = document.createElement('li');
-    option.className = 'select2-results__option';
+    option.classList.add('select2-results__option');
+    option.classList.add('select2-results__option--selectable');
 
     var attrs = {
-      'role': 'treeitem',
-      'aria-selected': 'false'
+      'role': 'option'
     };
 
-    if (data.disabled) {
-      delete attrs['aria-selected'];
+    var matches = window.Element.prototype.matches ||
+      window.Element.prototype.msMatchesSelector ||
+      window.Element.prototype.webkitMatchesSelector;
+
+    if ((data.element != null && matches.call(data.element, ':disabled')) ||
+        (data.element == null && data.disabled)) {
       attrs['aria-disabled'] = 'true';
+
+      option.classList.remove('select2-results__option--selectable');
+      option.classList.add('select2-results__option--disabled');
     }
 
     if (data.id == null) {
-      delete attrs['aria-selected'];
+      option.classList.remove('select2-results__option--selectable');
     }
 
     if (data._resultId != null) {
@@ -195,7 +204,9 @@ define([
     if (data.children) {
       attrs.role = 'group';
       attrs['aria-label'] = data.text;
-      delete attrs['aria-selected'];
+
+      option.classList.remove('select2-results__option--selectable');
+      option.classList.add('select2-results__option--group');
     }
 
     for (var attr in attrs) {
@@ -210,7 +221,6 @@ define([
       var label = document.createElement('strong');
       label.className = 'select2-results__group';
 
-      var $label = $(label);
       this.template(data, label);
 
       var $children = [];
@@ -224,7 +234,8 @@ define([
       }
 
       var $childrenContainer = $('<ul></ul>', {
-        'class': 'select2-results__options select2-results__options--nested'
+        'class': 'select2-results__options select2-results__options--nested',
+        'role': 'none'
       });
 
       $childrenContainer.append($children);
@@ -235,7 +246,7 @@ define([
       this.template(data, option);
     }
 
-    $.data(option, 'data', data);
+    Utils.StoreData(option, 'data', data);
 
     return option;
   };
@@ -276,7 +287,10 @@ define([
       }
 
       self.setClasses();
-      self.highlightFirstItem();
+
+      if (self.options.get('scrollAfterSelect')) {
+        self.highlightFirstItem();
+      }
     });
 
     container.on('unselect', function () {
@@ -285,7 +299,10 @@ define([
       }
 
       self.setClasses();
-      self.highlightFirstItem();
+
+      if (self.options.get('scrollAfterSelect')) {
+        self.highlightFirstItem();
+      }
     });
 
     container.on('open', function () {
@@ -321,9 +338,9 @@ define([
         return;
       }
 
-      var data = $highlighted.data('data');
+      var data = Utils.GetData($highlighted[0], 'data');
 
-      if ($highlighted.attr('aria-selected') == 'true') {
+      if ($highlighted.hasClass('select2-results__option--selected')) {
         self.trigger('close', {});
       } else {
         self.trigger('select', {
@@ -335,12 +352,13 @@ define([
     container.on('results:previous', function () {
       var $highlighted = self.getHighlightedResults();
 
-      var $options = self.$results.find('[aria-selected]');
+      var $options = self.$results.find('.select2-results__option--selectable');
 
       var currentIndex = $options.index($highlighted);
 
-      // If we are already at te top, don't move further
-      if (currentIndex === 0) {
+      // If we are already at the top, don't move further
+      // If no options, currentIndex will be -1
+      if (currentIndex <= 0) {
         return;
       }
 
@@ -369,7 +387,7 @@ define([
     container.on('results:next', function () {
       var $highlighted = self.getHighlightedResults();
 
-      var $options = self.$results.find('[aria-selected]');
+      var $options = self.$results.find('.select2-results__option--selectable');
 
       var currentIndex = $options.index($highlighted);
 
@@ -397,7 +415,8 @@ define([
     });
 
     container.on('results:focus', function (params) {
-      params.element.addClass('select2-results__option--highlighted');
+      params.element[0].classList.add('select2-results__option--highlighted');
+      params.element[0].setAttribute('aria-selected', 'true');
     });
 
     container.on('results:message', function (params) {
@@ -429,13 +448,13 @@ define([
       });
     }
 
-    this.$results.on('mouseup', '.select2-results__option[aria-selected]',
+    this.$results.on('mouseup', '.select2-results__option--selectable',
       function (evt) {
       var $this = $(this);
 
-      var data = $this.data('data');
+      var data = Utils.GetData(this, 'data');
 
-      if ($this.attr('aria-selected') === 'true') {
+      if ($this.hasClass('select2-results__option--selected')) {
         if (self.options.get('multiple')) {
           self.trigger('unselect', {
             originalEvent: evt,
@@ -454,12 +473,13 @@ define([
       });
     });
 
-    this.$results.on('mouseenter', '.select2-results__option[aria-selected]',
+    this.$results.on('mouseenter', '.select2-results__option--selectable',
       function (evt) {
-      var data = $(this).data('data');
+      var data = Utils.GetData(this, 'data');
 
       self.getHighlightedResults()
-          .removeClass('select2-results__option--highlighted');
+          .removeClass('select2-results__option--highlighted')
+          .attr('aria-selected', 'false');
 
       self.trigger('results:focus', {
         data: data,
@@ -486,7 +506,7 @@ define([
       return;
     }
 
-    var $options = this.$results.find('[aria-selected]');
+    var $options = this.$results.find('.select2-results__option--selectable');
 
     var currentIndex = $options.index($highlighted);
 

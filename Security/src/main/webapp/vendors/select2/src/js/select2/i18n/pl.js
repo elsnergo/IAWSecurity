@@ -40,6 +40,15 @@ define(function () {
     },
     searching: function () {
       return 'Trwa wyszukiwanie…';
+    },
+    removeAllItems: function () {
+      return 'Usuń wszystkie elementy';
+    },
+    removeItem: function () {
+      return 'Usuń element';
+    },
+    search: function() {
+      return 'Szukaj';
     }
   };
 });

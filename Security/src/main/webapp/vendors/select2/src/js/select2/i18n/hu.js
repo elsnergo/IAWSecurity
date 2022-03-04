@@ -1,6 +1,9 @@
 define(function () {
   // Hungarian
   return {
+    errorLoading: function () {
+      return 'Az eredmények betöltése nem sikerült.';
+    },
     inputTooLong: function (args) {
       var overChars = args.input.length - args.maximum;
 
@@ -22,6 +25,15 @@ define(function () {
     },
     searching: function () {
       return 'Keresés…';
+    },
+    removeAllItems: function () {
+      return 'Távolítson el minden elemet';
+    },
+    removeItem: function () {
+      return 'Elem eltávolítása';
+    },
+    search: function() {
+      return 'Keresés';
     }
   };
 });
