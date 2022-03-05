@@ -326,13 +326,6 @@
 												  <option value="">Seleccione...</option>
 												  <% 
 												  	for(Tbl_user tu :listaUsuario){
-							                      		String estado = "";
-							                      		if(tu.getEstado()!=3){
-							                      			estado = "ACTIVO";
-							                      		}
-							                      		else{
-							                      			estado = "INACTIVO";
-							                      		}
 												  %>
 												  <option value="<%=tu.getId_user()%>"><%=tu.getUser()%></option>
 												  <%
@@ -344,7 +337,23 @@
                                         <div class="field item form-group">
                                             <label class="col-form-label col-md-3 col-sm-3  label-align">Rol: <span class="required">*</span></label>
                                             <div class="col-md-6 col-sm-6">
-                                                <input class="form-control" class='optional' name="occupation" data-validate-length-range="5,15" type="text" /></div>
+<!--                                                 <input class="form-control" class='optional' name="occupation" data-validate-length-range="5,15" type="text" /></div> -->
+												<%
+							                      	ArrayList<Tbl_rol> listRol = new ArrayList<Tbl_rol>();
+							                      	Dt_rol dtr = new Dt_rol();
+							                      	listRol = dtr.listaRolActivos();
+								                 %>
+								                 <select class="form-control js-example-basic-single" name="cbxRol" id="cbxRol" required="required">
+												  <option value="">Seleccione...</option>
+												  <% 
+												  	for(Tbl_rol trol :listRol){
+												  %>
+												  <option value="<%=trol.getId_rol()%>"><%=trol.getRol()%></option>
+												  <%
+												  	}
+												  %>
+												</select>
+											</div>
                                         </div>
                                         
                                         <div class="ln_solid">
