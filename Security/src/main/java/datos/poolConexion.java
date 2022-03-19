@@ -10,9 +10,14 @@ public class poolConexion
 	private static poolConexion INSTANCE = null;
 	private static Connection con = null;
 	private static BasicDataSource dataSource;
+	//DATOS DE LA CONEXION LOCAL
+	/*private static String url = "jdbc:mysql://localhost:3306/seguridad?autoReconnect=true&useSSL=false&serverTimezone=UTC";
+	private static String user = "root";
+	private static String pass="Egonzalez87";*/
+	//DATOS DE LA CONEXION REMOTA
 	private static String url = "jdbc:mysql://localhost:3306/seguridad?autoReconnect=true&useSSL=false&serverTimezone=UTC";
 	private static String user = "root";
-	private static String pass="Egonzalez87";
+	private static String pass="My$qlS3rv3rAPS*";
 
     //Constructor
 	private poolConexion(){

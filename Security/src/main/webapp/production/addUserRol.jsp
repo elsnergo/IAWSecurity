@@ -412,6 +412,10 @@
 	</script>
 
     <script>
+	    $(document).ready(function() {
+	        $('.js-example-basic-single').select2();
+	    });
+    
         // initialize a validator instance from the "FormValidator" constructor.
         // A "<form>" element is optionally passed as an argument, but is not a must
         var validator = new FormValidator({
@@ -454,12 +458,7 @@
     <!-- Select2 -->
     <script src="../vendors/select2/dist/js/select2.min.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
-    
-    <script type="text/javascript">
-    $(document).ready(function() {
-        $('.js-example-basic-single').select2();
-    });
-    </script>
+   
 
 </body>
 </html>
