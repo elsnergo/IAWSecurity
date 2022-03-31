@@ -14,6 +14,7 @@ public class Dt_usuario {
 	private ResultSet rsUsuario = null;
 	private ResultSet rs = null;
 	private PreparedStatement ps = null;
+	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	
 	//Metodo para llenar el RusultSet //para insert, update and delete
 	public void llenaRsUsuario(Connection c){
@@ -72,6 +73,66 @@ public class Dt_usuario {
 		return listUser;
 	}
 	
+	//Metodo para almacenar nuevo usuario
+	public int guardarUser(Tbl_user tus){
+//		boolean guardado = false;
+		int guardado = 0;
+		try{
+			c = poolConexion.getConnection();
+			this.llenaRsUsuario(c);
+			rsUsuario.moveToInsertRow();
+			rsUsuario.updateString("user", tus.getUser());
+			rsUsuario.updateString("nombres", tus.getNombres());
+			rsUsuario.updateString("apellidos", tus.getApellidos());
+			rsUsuario.updateString("email", tus.getEmail());
+			rsUsuario.updateString("pwd", tus.getPwd());
+			rsUsuario.updateTimestamp("fecha_creacion", tus.getFecha_creacion());
+			rsUsuario.updateInt("usuario_creacion", tus.getUsuario_creacion());
+			//GUARDAMOS EL CODIGO DE VERIFICACION //PARA VERIFICAR EL EMAIL
+			rsUsuario.updateString("codVerificacion", tus.getCodVerificacion());
+			rsUsuario.updateInt("estado", 0); //0 PORQUE EL USUARIO ES REGISTRADO PERO SU EMAIL AUN NO HA SIDO VERIFICADO
+			rsUsuario.insertRow();
+			rsUsuario.moveToCurrentRow();
+			this.llenaRsUsuario(c);
+			rsUsuario.last();
+			guardado = rsUsuario.getInt("id_user");
+//			guardado = true;
+		}
+		catch (Exception e) {
+			System.err.println("ERROR AL GUARDAR Tbl_User "+e.getMessage());
+			e.printStackTrace();
+		}
+		finally{
+			try {
+				if(rsUsuario != null){
+					rsUsuario.close();
+				}
+				if(c != null){
+					poolConexion.closeConnection(c);
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return guardado;
+	}
 	
+	
+	
+	
+	//METODO PARA GENERAR UN CODIGO DE VERIFICACION //
+	public static String randomAlphaNumeric(int count) 
+	{
+		StringBuilder builder = new StringBuilder();
+		while (count-- != 0) 
+		{
+			int character = (int)(Math.random()*ALPHA_NUMERIC_STRING.length());
+			builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+		}
+		return builder.toString();
+	}
 
 }
