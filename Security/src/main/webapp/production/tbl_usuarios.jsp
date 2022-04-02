@@ -339,6 +339,7 @@
                           <th>Usuario</th>
                           <th>Correo</th>
                           <th>Estado</th>
+                          <th>Opciones</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -358,6 +359,20 @@
                           <td><%=tu.getUser() %></td>
                           <td><%=tu.getEmail() %></td>
                           <td><%=estado %></td>
+                          <td>
+                          	<a href="viewUsuario.jsp?idU=<%=tu.getId_user() %>" title="Visualizar Usuario">
+	                          	<i class="fa fa-search"></i> 
+                          	</a>
+                          	&nbsp;
+                          	<a href="editUsuario.jsp?idU=<%=tu.getId_user() %>" title="Editar Usuario">
+	                          	<i class="fa fa-edit"></i> 
+                          	</a>
+                          	&nbsp;
+                          	<a href="deleteUsuario.jsp?idU=<%=tu.getId_user() %>" title="Eliminar Usuario">
+	                          	<i class="fa fa-trash"></i> 
+                          	</a>
+                          	&nbsp;
+                          </td>
                         </tr>
                         <%
                       	}
@@ -370,6 +385,7 @@
                           <th>Usuario</th>
                           <th>Correo</th>
                           <th>Estado</th>
+                          <th>Opciones</th>
                         </tr>
                       </tfoot>
                     </table>

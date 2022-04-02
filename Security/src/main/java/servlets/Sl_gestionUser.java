@@ -43,46 +43,51 @@ public class Sl_gestionUser extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-//		doGet(request, response);
+		// doGet(request, response);
 		
 		//obtenemos el valor de opcion
 		int opc = 0;
 		opc = Integer.parseInt(request.getParameter("opcion"));
+		
 		// INSTANCIAMOS LOS OBJETOS
 		Tbl_user tus = new Tbl_user();
 		Tbl_user2 tus2 = new Tbl_user2();
 		Dt_usuario dtus = new Dt_usuario();
 		Dt_user2 dtus2 = new Dt_user2();
 		Encrypt dtenc = new Encrypt();
-		// CONSTRUIMOS EL OBJETO CON LOS VALORES DE LOS CONTROLES
-		tus.setNombres(request.getParameter("txtnombres"));
-		tus.setApellidos(request.getParameter("txtapellidos"));
-		tus.setUser(request.getParameter("txtuser"));
-		tus.setEmail(request.getParameter("txtemail"));
-		// CONSTRUIMOS EL OBJETOS CON LOS CAMPOS DE CONTROL Y AUDITORIA
-		//PARA GUARDAR LA FECHA Y HORA DE CREACION
+		
+		//PARA GUARDAR LA FECHA Y HORA DE CREACION / EDICION / ELIMINACION
         Date fechaSistema = new Date();
-        tus.setFecha_creacion(new java.sql.Timestamp(fechaSistema.getTime()));
-        System.out.println("tus.getFechaCreacion(): "+tus.getFecha_creacion());
-        tus.setUsuario_creacion(1);//1 valor temporal mientras se programa la sesion
 		
 		//GENERAMOS EL CODIGO DE VERIFICACION Y LO ASIGNAMOS AL OBJETO
 		tus.setCodVerificacion(dtus.randomAlphaNumeric(10)); // 10 PORQUE ES LA CANTIDAD DE CARACTERES QUE SOPORTA LA BD
 		
-		/////// ENCRIPTACION DE LA PWD //////////
+		/////// VARIABLES PARA ENCRIPTAR LA PWD //////////
 		String key = "";
+		String pwd = "";
 		String pwdEncrypt = "";
-		key=dtenc.generarLLave();
-		tus2.setToken(key);
-		pwdEncrypt = dtenc.getAES(request.getParameter("txtclave").trim(),key);
-		tus.setPwd(pwdEncrypt);
-		/////////////////////////////////////////
 		
-				
-				////////////////////////////////////////////////////////////////////
-				
+		
 				switch(opc) {
 				case 1:
+					// CONSTRUIMOS EL OBJETO CON LOS VALORES DE LOS CONTROLES
+					tus.setUser(request.getParameter("txtuser"));
+					tus.setPwd(request.getParameter("txtclave").trim());
+					tus.setNombres(request.getParameter("txtnombres"));
+					tus.setApellidos(request.getParameter("txtapellidos"));
+					tus.setId_user(Integer.parseInt(request.getParameter("idUsuario")));
+					tus.setEmail(request.getParameter("txtemail"));
+					tus.setFecha_creacion(new java.sql.Timestamp(fechaSistema.getTime()));
+			        System.out.println("tus.getFechaCreacion(): "+tus.getFecha_creacion());
+			        tus.setUsuario_creacion(1);//1 valor temporal mientras se programa la sesion
+					
+			        /////// PARA ENCRIPTAR LA PWD //////////
+					key=dtenc.generarLLave();
+					tus2.setToken(key);
+					pwd = tus.getPwd();
+					pwdEncrypt = dtenc.getAES(pwd,key);
+					tus.setPwd(pwdEncrypt);
+					///////////////////////////////////////
 					try {
 						tus2.setId_user(dtus.guardarUser(tus));
 						if(tus2.getId_user()>0) {
@@ -98,7 +103,40 @@ public class Sl_gestionUser extends HttpServlet {
 					}
 					break;
 				case 2:
-					//codigo
+					// CONSTRUIMOS EL OBJETO CON LOS VALORES DE LOS CONTROLES
+					tus.setNombres(request.getParameter("txtnombres"));
+					tus.setApellidos(request.getParameter("txtapellidos"));
+					tus.setId_user(Integer.parseInt(request.getParameter("idUsuario")));
+					try {
+						tus.setFecha_edicion(new java.sql.Timestamp(fechaSistema.getTime()));
+						tus.setUsuario_edicion(1);//1 valor temporal mientras se programa la sesion
+						if(dtus.modificarUser(tus)) {
+							response.sendRedirect("production/tbl_usuarios.jsp?msj=3");
+						}
+						else {
+							response.sendRedirect("production/tbl_usuarios.jsp?msj=4");
+						}
+					}catch(Exception e) {
+						System.out.println("Error Sl_gestionUser opc2: "+e.getMessage());
+						e.printStackTrace();
+					}
+					break;
+				case 3:
+					// CONSTRUIMOS EL OBJETO CON LOS VALORES DE LOS CONTROLES
+					tus.setId_user(Integer.parseInt(request.getParameter("idUsuario")));
+					try {
+						tus.setFecha_eliminacion(new java.sql.Timestamp(fechaSistema.getTime()));
+						tus.setUsuario_eliminacion(1);//1 valor temporal mientras se programa la sesion
+						if(dtus.eliminarUser(tus)) {
+							response.sendRedirect("production/tbl_usuarios.jsp?msj=5");
+						}
+						else {
+							response.sendRedirect("production/tbl_usuarios.jsp?msj=6");
+						}
+					}catch(Exception e) {
+						System.out.println("Error Sl_gestionUser opc3: "+e.getMessage());
+						e.printStackTrace();
+					}
 					break;
 				default:
 					//codigo

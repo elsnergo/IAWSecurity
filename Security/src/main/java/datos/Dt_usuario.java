@@ -121,7 +121,140 @@ public class Dt_usuario {
 	}
 	
 	
+	public Tbl_user getUserbyID(int idUser) {
+		Tbl_user tu = new Tbl_user();
+		try {
+			c = poolConexion.getConnection();
+			ps = c.prepareStatement("SELECT * FROM seguridad.tbl_user where estado <> 3 and id_user=?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY, ResultSet.HOLD_CURSORS_OVER_COMMIT);
+			ps.setInt(1, idUser);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				tu.setId_user(rs.getInt("id_user"));
+				tu.setNombres(rs.getString("nombres"));
+				tu.setApellidos(rs.getString("apellidos"));
+				tu.setUser(rs.getString("user"));
+				tu.setPwd(rs.getString("pwd"));
+				tu.setEmail(rs.getString("email"));
+				tu.setUrlFoto(rs.getString("urlFoto"));
+				tu.setCodVerificacion(rs.getString("codVerificacion"));
+				tu.setEstado(rs.getInt("estado"));
+			}
+		}catch (Exception e)
+		{
+			System.out.println("DATOS ERROR getUserbyID(): "+ e.getMessage());
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if(rs != null){
+					rs.close();
+				}
+				if(ps != null){
+					ps.close();
+				}
+				if(c != null){
+					poolConexion.closeConnection(c);
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return tu;
+	}
 	
+	
+	// Metodo para modificar usuario
+	public boolean modificarUser(Tbl_user tus)
+	{
+		boolean modificado=false;	
+		try
+		{
+			c = poolConexion.getConnection();
+			this.llenaRsUsuario(c);
+			rsUsuario.beforeFirst();
+			while (rsUsuario.next())
+			{
+				if(rsUsuario.getInt(1)==tus.getId_user())
+				{
+					rsUsuario.updateString("nombres", tus.getNombres());
+					rsUsuario.updateString("apellidos", tus.getApellidos());
+					rsUsuario.updateTimestamp("fecha_edicion", tus.getFecha_edicion());
+					rsUsuario.updateInt("usuario_edicion", tus.getUsuario_edicion());
+					rsUsuario.updateInt("estado", 2);
+					rsUsuario.updateRow();
+					modificado=true;
+					break;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			System.err.println("ERROR AL modificarUser() "+e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				if(rsUsuario != null){
+					rsUsuario.close();
+				}
+				if(c != null){
+					poolConexion.closeConnection(c);
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return modificado;
+	}
+	
+	
+	// Metodo para eliminar usuario
+	public boolean eliminarUser(Tbl_user tus)
+	{
+		boolean eliminado=false;	
+		try
+		{
+			c = poolConexion.getConnection();
+			this.llenaRsUsuario(c);
+			rsUsuario.beforeFirst();
+			while (rsUsuario.next()){
+				if(rsUsuario.getInt(1)==tus.getId_user()){
+					rsUsuario.updateTimestamp("fecha_eliminacion", tus.getFecha_eliminacion());
+					rsUsuario.updateInt("usuario_eliminacion", tus.getUsuario_eliminacion());
+					rsUsuario.updateInt("estado", 3);
+					rsUsuario.updateRow();
+					eliminado=true;
+					break;
+				}
+			}
+		}
+		catch (Exception e){
+			System.err.println("ERROR AL eliminarUser() "+e.getMessage());
+			e.printStackTrace();
+		}
+		finally{
+			try {
+				if(rsUsuario != null){
+					rsUsuario.close();
+				}
+				if(c != null){
+					poolConexion.closeConnection(c);
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return eliminado;
+	}
+
 	
 	//METODO PARA GENERAR UN CODIGO DE VERIFICACION //
 	public static String randomAlphaNumeric(int count) 
