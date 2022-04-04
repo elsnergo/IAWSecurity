@@ -14,6 +14,7 @@ import entidades.Tbl_user2;
 import datos.Encrypt;
 import datos.Dt_usuario;
 import datos.Dt_user2;
+import negocio.Ng_usuario;
 
 /**
  * Servlet implementation class Sl_gestionUser
@@ -55,6 +56,7 @@ public class Sl_gestionUser extends HttpServlet {
 		Dt_usuario dtus = new Dt_usuario();
 		Dt_user2 dtus2 = new Dt_user2();
 		Encrypt dtenc = new Encrypt();
+		Ng_usuario ngu = new Ng_usuario();
 		
 		//PARA GUARDAR LA FECHA Y HORA DE CREACION / EDICION / ELIMINACION
         Date fechaSistema = new Date();
@@ -75,7 +77,6 @@ public class Sl_gestionUser extends HttpServlet {
 					tus.setPwd(request.getParameter("txtclave").trim());
 					tus.setNombres(request.getParameter("txtnombres"));
 					tus.setApellidos(request.getParameter("txtapellidos"));
-					tus.setId_user(Integer.parseInt(request.getParameter("idUsuario")));
 					tus.setEmail(request.getParameter("txtemail"));
 					tus.setFecha_creacion(new java.sql.Timestamp(fechaSistema.getTime()));
 			        System.out.println("tus.getFechaCreacion(): "+tus.getFecha_creacion());
@@ -89,14 +90,19 @@ public class Sl_gestionUser extends HttpServlet {
 					tus.setPwd(pwdEncrypt);
 					///////////////////////////////////////
 					try {
-						tus2.setId_user(dtus.guardarUser(tus));
-						if(tus2.getId_user()>0) {
-							if(dtus2.guardarUser(tus2)) {
-								response.sendRedirect("production/tbl_usuarios.jsp?msj=1");
-							}
+						if(ngu.existeUser(tus.getUser()) || ngu.existeEmail(tus.getEmail())) {
+							response.sendRedirect("production/tbl_usuarios.jsp?msj=7");
 						}else {
-							response.sendRedirect("production/tbl_usuarios.jsp?msj=2");
+							tus2.setId_user(dtus.guardarUser(tus));
+							if(tus2.getId_user()>0) {
+								if(dtus2.guardarUser(tus2)) {
+									response.sendRedirect("production/tbl_usuarios.jsp?msj=1");
+								}
+							}else {
+								response.sendRedirect("production/tbl_usuarios.jsp?msj=2");
+							}
 						}
+						
 					}catch(Exception e) {
 						System.out.println("Error Sl_gestionUser opc1: "+e.getMessage());
 						e.printStackTrace();
