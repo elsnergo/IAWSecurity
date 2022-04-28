@@ -5,6 +5,8 @@ public class Vw_userrol {
 	private int id_user;
 	private String user;
 	private String pwd;
+	private String key;
+	private String codVerificacion;
 	private String nombres;
 	private String apellidos;
 	private String email;
@@ -73,6 +75,18 @@ public class Vw_userrol {
 	}
 	public void setRol(String rol) {
 		this.rol = rol;
+	}
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
+	public String getCodVerificacion() {
+		return codVerificacion;
+	}
+	public void setCodVerificacion(String codVerificacion) {
+		this.codVerificacion = codVerificacion;
 	}
 	
 	
