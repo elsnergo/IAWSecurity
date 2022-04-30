@@ -9,8 +9,8 @@ public class Dt_enviarEmail {
 	
 	/*---------------------- Configuración Localhost------------------------------*/
 	private static final String SMTP_HOST_NAME = "smtp.gmail.com";
-	private static final String SMTP_AUTH_USER = "email@gmail.com";
-	private static final String SMTP_AUTH_PWD = "contraseña_de_aplicaciones";
+	private static final String SMTP_AUTH_USER = "egonzalezo1987@gmail.com";
+	private static final String SMTP_AUTH_PWD = "jdfdybecwonildba";
 	
 	//Enlace de verificación de correo
     String linkHR = "http://localhost:8080/Security/login.jsp";

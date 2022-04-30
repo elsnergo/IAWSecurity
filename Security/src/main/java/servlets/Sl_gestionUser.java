@@ -82,7 +82,7 @@ public class Sl_gestionUser extends HttpServlet {
 					tus.setEmail(request.getParameter("txtemail"));
 					tus.setFecha_creacion(new java.sql.Timestamp(fechaSistema.getTime()));
 			        System.out.println("tus.getFechaCreacion(): "+tus.getFecha_creacion());
-			        tus.setUsuario_creacion(1);//1 valor temporal mientras se programa la sesion
+			        tus.setUsuario_creacion(Integer.parseInt(request.getParameter("iduser")));//1 valor temporal mientras se programa la sesion
 					
 			        /////// PARA ENCRIPTAR LA PWD //////////
 					key=dtenc.generarLLave();
@@ -119,7 +119,7 @@ public class Sl_gestionUser extends HttpServlet {
 					tus.setId_user(Integer.parseInt(request.getParameter("idUsuario")));
 					try {
 						tus.setFecha_edicion(new java.sql.Timestamp(fechaSistema.getTime()));
-						tus.setUsuario_edicion(1);//1 valor temporal mientras se programa la sesion
+						tus.setUsuario_edicion(Integer.parseInt(request.getParameter("iduser")));//1 valor temporal mientras se programa la sesion
 						if(dtus.modificarUser(tus)) {
 							response.sendRedirect("production/tbl_usuarios.jsp?msj=3");
 						}
