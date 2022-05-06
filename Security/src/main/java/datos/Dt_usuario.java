@@ -121,6 +121,52 @@ public class Dt_usuario {
 		return guardado;
 	}
 	
+	// Metodo para guardar la foto del Usuario
+	public boolean guardarFotoUser(int idUser, String urlFoto)
+	{
+		boolean actualizado = false;
+		
+		try{
+			c = poolConexion.getConnection();
+			this.llenaRsUsuario(c);	
+			rsUsuario.beforeFirst();
+			while(rsUsuario.next()){
+				if(rsUsuario.getInt(1)==idUser)
+				{
+					rsUsuario.updateString("urlFoto", urlFoto);
+					rsUsuario.updateInt("estado", 2);
+					rsUsuario.updateRow();
+					actualizado = true;
+					break;
+				}
+			}
+		}
+		catch (Exception e) 
+		{
+			System.err.println("ERROR AL GUARDAR FOTO "+e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				if(rsUsuario != null){
+					rsUsuario.close();
+				}
+				if(c != null){
+					poolConexion.closeConnection(c);
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return actualizado;
+	}
+	
+	
+	
 	
 	public Tbl_user getUserbyID(int idUser) {
 		Tbl_user tu = new Tbl_user();
@@ -307,6 +353,51 @@ public class Dt_usuario {
 		
 		return actualizado;
 	}
+	
+	// Metodo para visualizar los datos de un usuario específico
+	public Tbl_user getUsuario(int idUsuario)
+	{
+		Tbl_user user = new Tbl_user();
+		try{
+			c = poolConexion.getConnection();
+			ps = c.prepareStatement("select * from seguridad.tbl_user where id_user=?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);
+			ps.setInt(1, idUsuario);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				user.setId_user(rs.getInt("id_user"));
+				user.setUser(rs.getString("user"));
+				user.setNombres(rs.getString("nombres"));
+				user.setApellidos(rs.getString("apellidos"));
+				user.setUrlFoto(rs.getString("urlFoto"));
+			}
+		}
+		catch (Exception e){
+			System.out.println("DATOS ERROR getUsuario(): "+ e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				if(rs != null){
+					rs.close();
+				}
+				if(ps != null){
+					ps.close();
+				}
+				if(c != null){
+					poolConexion.closeConnection(c);
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return user;
+	}
+	
+	
 	
 	// METODO PARA OBTENER UN OBJETO DE TIPO Vw_userrol //
 		public Vw_userrol dtGetVwUR(String login){

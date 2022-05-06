@@ -413,6 +413,10 @@
 	                          	<i class="fa fa-search"></i> 
                           	</a>
                           	&nbsp;
+                          	<a href="addUserFoto.jsp?idU=<%=tu.getId_user() %>" title="Añadir Foto a Usuario">
+	                          	<i class="fa fa-camera"></i> 
+                          	</a>
+                          	&nbsp;
                           	<a href="editUsuario.jsp?idU=<%=tu.getId_user() %>" title="Editar Usuario">
 	                          	<i class="fa fa-edit"></i> 
                           	</a>
