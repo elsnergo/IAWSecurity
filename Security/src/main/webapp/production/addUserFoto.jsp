@@ -367,10 +367,11 @@
                                     			String idUser = "";
                                     			idUser = request.getParameter("idU")==null?"0":request.getParameter("idU");
                                     			tus = dtus.getUsuario(Integer.parseInt(idUser));
+                                    			System.out.println("urlFoto: "+tus.getUrlFoto());
 	                                        %>
                                         	<input type="hidden" name="iduser" value="<%=tus.getId_user()%>">
                                             <div class="cuadro-fotoNima" align="center">
-												<img id="preview" name="preview" src="<%=tus.getUrlFoto()==null?"#":tus.getUrlFoto()%>"  alt="Foto Usuario" style="width: 100px; height: 100px; border-bottom-color: white; margin: 2px;" />
+												<img id="preview" name="preview" src="../<%=tus.getUrlFoto()==null?"#":tus.getUrlFoto()%>"  alt="Foto Usuario" style="width: 100px; height: 100px; border-bottom-color: white; margin: 2px;" />
 											</div>
                                         </div>
                                         <div class="form-group" align="center">
