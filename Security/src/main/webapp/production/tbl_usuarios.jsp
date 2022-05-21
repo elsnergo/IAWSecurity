@@ -372,6 +372,9 @@
                             	<a href="addUsuario.jsp">
                             		<i class="fa fa-plus-square"></i>
                             		Nuevo Usuario
+                            	</a>&nbsp;&nbsp;
+                            	<a href="#" onclick="printListUsers();">
+                            		<i class="fa fa-print" title="Imprimir Lista de Usuarios"></i>
                             	</a>
                             	<br></br>
                             </div>
@@ -411,6 +414,9 @@
                           <td>
                           	<a href="viewUsuario.jsp?idU=<%=tu.getId_user() %>" title="Visualizar Usuario">
 	                          	<i class="fa fa-search"></i> 
+                          	</a>
+                          	<a href="../Sl_rptFichaUsuario?idU=<%=tu.getId_user() %>" title="Imprimir Ficha del Usuario" target="_blank">
+                            	<i class="fa fa-print"></i>
                           	</a>
                           	&nbsp;
                           	<a href="addUserFoto.jsp?idU=<%=tu.getId_user() %>" title="Añadir Foto a Usuario">
@@ -1142,6 +1148,17 @@
         <!-- /footer content -->
       </div>
     </div>
+    
+    <script>
+ 	// IMPRIMIR REPORTE SIN PARAMETROS //
+    function printListUsers(){
+    	window.open("../Sl_rptListUsers", '_blank');
+    }
+    
+    
+    </script>
+    
+    
 
     <!-- jQuery -->
     <script src="../vendors/jquery/dist/jquery.min.js"></script>
