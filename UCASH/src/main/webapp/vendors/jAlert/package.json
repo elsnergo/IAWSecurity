@@ -1,0 +1,23 @@
+{
+  "name": "jAlert",
+  "version": "4.9.1",
+  "description": "Simple jQuery (Modal | Popup | Lightbox | Alert) Plugin",
+  "author": { 
+    "name" : "HTMLGuy, LLC", 
+    "url" : "https://htmlguy.com"
+  },
+  "main": "./dist/jAlert.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HTMLGuyLLC/jAlert"
+  },
+  "bugs": {
+    "url": "https://github.com/HTMLGuyLLC/jAlert/issues"
+  },
+  "homepage": "https://htmlguyllc.github.io/jAlert/",
+  "private": false,
+  "dependencies": {
+    "jquery": "^3.4.0"
+  },
+  "license":"MIT"
+}

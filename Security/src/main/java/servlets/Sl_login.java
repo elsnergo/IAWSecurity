@@ -66,7 +66,7 @@ public class Sl_login extends HttpServlet {
 					response.sendRedirect("production/index.jsp");
 				}
 				else{
-					response.sendRedirect("login.jsp?msj=403");
+					response.sendRedirect("page_403.jsp");
 				}	
 			}
 			catch(Exception e){
@@ -84,7 +84,7 @@ public class Sl_login extends HttpServlet {
 					response.sendRedirect("production/index.jsp");
 				}
 				else{
-					response.sendRedirect("login.jsp?msj=403");
+					response.sendRedirect("page_403.jsp");
 				}	
 			}
 			catch(Exception e){

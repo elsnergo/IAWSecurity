@@ -1666,6 +1666,12 @@ h2 {
   padding: 1px 5px 6px;
   margin-bottom: 10px; }
 
+.x_title_2 {
+  border-bottom: 2px solid #E6E9ED;
+/*    padding: 1px 5px 6px; */
+/*    margin-bottom: 10px; */
+ }
+
 .x_title .filter {
   width: 40%;
   float: right; }
@@ -1678,10 +1684,24 @@ h2 {
   overflow: hidden;
   white-space: nowrap; }
 
+.x_title_2 h2 {
+  margin: 5px 0 6px;
+  float: left;
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap; }
+
 .x_title h2 small {
   margin-left: 10px; }
 
+.x_title_2 h2 small {
+  margin-left: 10px; }
+
 .x_title span {
+  color: #BDBDBD; }
+
+.x_title_2 span {
   color: #BDBDBD; }
 
 .x_content {
